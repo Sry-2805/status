@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Location Selector</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 40px;
+    }
+
+    .container {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 400px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 20px;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      margin-top: 25px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <label for="state">State:</label>
+    <select id="state" onchange="updateDistricts()">
+      <option value="">Select State</option>
+      <option value="Andhra Pradesh">Andhra Pradesh</option>
+      <option value="Tamil Nadu">Tamil Nadu</option>
+    </select>
+
+    <label for="district">District:</label>
+    <select id="district" onchange="updateConstituencies()">
+      <option value="">Select District</option>
+    </select>
+
+    <label for="constituency">Constituency:</label>
+    <select id="constituency">
+      <option value="">Select Constituency</option>
+    </select>
+
+    <button onclick="submitForm()">Submit</button>
+  </div>
+
+  <script>
+    // Example data structure for states, districts, and constituencies
+    const locationData = {
+      "Andhra Pradesh": {
+        "Guntur": ["Guntur West", "Guntur East"],
+        "Krishna": ["Machilipatnam", "Vijayawada"]
+      },
+      "Tamil Nadu": {
+        "Chennai": ["Chennai North", "Chennai South"],
+        "Coimbatore": ["Coimbatore North", "Coimbatore South"]
+      }
+    };
+
+    function updateDistricts() {
+      const state = document.getElementById("state").value;
+      const districtSelect = document.getElementById("district");
+      const constituencySelect = document.getElementById("constituency");
+
+      districtSelect.innerHTML = '<option value="">Select District</option>';
+      constituencySelect.innerHTML = '<option value="">Select Constituency</option>';
+
+      if (state && locationData[state]) {
+        Object.keys(locationData[state]).forEach(district => {
+          const option = document.createElement("option");
+          option.value = district;
+          option.text = district;
+          districtSelect.appendChild(option);
+        });
+      }
+    }
+
+    function updateConstituencies() {
+      const state = document.getElementById("state").value;
+      const district = document.getElementById("district").value;
+      const constituencySelect = document.getElementById("constituency");
+
+      constituencySelect.innerHTML = '<option value="">Select Constituency</option>';
+
+      if (state && district && locationData[state][district]) {
+        locationData[state][district].forEach(constituency => {
+          const option = document.createElement("option");
+          option.value = constituency;
+          option.text = constituency;
+          constituencySelect.appendChild(option);
+        });
+      }
+    }
+
+    function submitForm() {
+      const constituency = document.getElementById("constituency").value;
+
+      if (constituency) {
+        const wikiSearch = `https://en.wikipedia.org/wiki/${encodeURIComponent(constituency)}`;
+        window.open(wikiSearch, '_blank');
+      } else {
+        alert("Please select a constituency before submitting.");
+      }
+    }
+  </script>
+</body>
+</html>
